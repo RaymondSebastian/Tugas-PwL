@@ -231,7 +231,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `iduser` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT NULL,
-  `password` varchar(32) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `status` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`iduser`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;

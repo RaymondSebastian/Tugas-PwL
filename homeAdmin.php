@@ -19,14 +19,14 @@ require "fungsi.php";
 require "head.html";
 
 //cek logout
-if (!isset($_SESSION['username'])){
+if (!isset($_SESSION['iduser'])){
 	header("location:index1.php");
 	exit;
 }
 ?>
 <div class="utama">
 	<br><br>
-	<h1 class="text-center">Selamat Datang di Halaman Administrator saudara <?php echo strtoupper($_SESSION['username'])?></h1>
+	<h1 class="text-center">Selamat Datang di Halaman Administrator saudara <?php echo strtoupper($_SESSION['iduser'])?></h1>
 </div>
 </body>
 </html>	

@@ -42,23 +42,47 @@
 		</div>	
 	</div>
 	<?php
-	if (isset($_POST['username'])){
-		require "fungsi.php";
-		$username=$_POST['username'];
-		$passw=md5($_POST['passw']);
-		$sql="select * from user where username='$username' and password='$passw'";
-		$hasil=mysqli_query($koneksi,$sql) or die(mysqli_error($koneksi));
-		$row=mysqli_fetch_assoc($hasil);
-		if (mysqli_affected_rows($koneksi)>0){
-			$_SESSION['username']=$username;
-			header("location:homeadmin.php");
-		}else{
-			echo "<div class='alert alert-danger w-25 mx-auto text-center mt-1 alert-dismissible'>
-			<button type='button' class='close' data-dismiss='alert'>&times;</button>
-			Maaf, login gagal. Ulangi login.
-			</div>";
-		}
+
+	session_start(); // Memulai session
+	require "fungsi.php"; // Pastikan file fungsi.php berisi koneksi yang aman ke database
+
+
+	if (isset($_SESSION['username'])) { 
+    	header("location: homeAdmin.php"); 
+	exit; 
 	}
-	?>	
+
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    	$username = trim($_POST['username']);
+    	$passw = trim($_POST['passw']); // Ambil password tanpa di-hash!
+    
+    if (!empty($username) && !empty($passw)) {
+        $sql1 = "SELECT * FROM user WHERE username = ?";
+        $stmt = $koneksi->prepare($sql1);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+            
+	if ($result->num_rows ==1) {
+            $user1 = $result->fetch_assoc();
+            if (password_verify($passw, $user1['password'])) {
+                $_SESSION['iduser'] = $user1['iduser']; // Simpan session user ID
+                header("location: homeAdmin.php");
+                exit();
+            } else {
+                echo "Password salah.";
+            }
+        } else {
+            echo "User tidak ditemukan.";
+        }
+
+        $stmt->close();
+	    }
+	 $koneksi->close();
+	} else {
+    echo "This script only accepts POST requests.";
+ }
+?>
+
 </body>
 </html>
